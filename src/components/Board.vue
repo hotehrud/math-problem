@@ -1,5 +1,6 @@
 <template>
   <div class="board-container">
+    <div class="cnt">{{ squareCount }}</div>
     <div
       v-for="(item, index) in row"
       ref="allow"
@@ -36,8 +37,8 @@ import match from "@/components/unit/match";
 
 let width = 20;
 let height = 60;
-let r = 5;
-let c = 5;
+let r = 6;
+let c = 6;
 
 export default {
   name: "Board",
@@ -47,6 +48,8 @@ export default {
   },
   data() {
     return {
+      squareCount: 0,
+      limit: 2,
       currentTarget: -1,
       width: 20,
       height: 60,
@@ -57,6 +60,30 @@ export default {
       row: [],
       col: [],
       points: [
+        {
+          x: height * 2 + width * 2,
+          y: height * 2 + width * 3,
+          width: width,
+          height: height
+        },
+        {
+          x: height * 3 + width * 3,
+          y: height * 2 + width * 3,
+          width: width,
+          height: height
+        },
+        {
+          x: height * 4 + width * 4,
+          y: height * 2 + width * 3,
+          width: width,
+          height: height
+        },
+        {
+          x: height * 0 + width * 0,
+          y: height * 3 + width * 4,
+          width: width,
+          height: height
+        },
         {
           x: height * 1 + width * 1,
           y: height * 3 + width * 4,
@@ -70,7 +97,25 @@ export default {
           height: height
         },
         {
+          x: height * 3 + width * 3,
+          y: height * 3 + width * 4,
+          width: width,
+          height: height
+        },
+        {
           x: height * 2 + width * 3,
+          y: height * 2 + width * 2,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 3 + width * 4,
+          y: height * 2 + width * 2,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 0 + width * 1,
           y: height * 3 + width * 3,
           width: height,
           height: width
@@ -78,6 +123,36 @@ export default {
         {
           x: height * 1 + width * 2,
           y: height * 3 + width * 3,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 2 + width * 3,
+          y: height * 3 + width * 3,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 3 + width * 4,
+          y: height * 3 + width * 3,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 0 + width * 1,
+          y: height * 4 + width * 4,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 1 + width * 2,
+          y: height * 4 + width * 4,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 2 + width * 3,
+          y: height * 4 + width * 4,
           width: height,
           height: width
         }
@@ -93,8 +168,6 @@ export default {
         this.row.push({
           uid: i + "" + j + "" + i + "" + (j + 1),
           style: {
-            position: "absolute",
-            backgroundColor: "red",
             top: t + "px",
             left: l + "px",
             width: this.width + "px",
@@ -116,8 +189,6 @@ export default {
         this.col.push({
           uid: j + "" + i + "" + (j + 1) + "" + i,
           style: {
-            position: "absolute",
-            backgroundColor: "red",
             top: t + "px",
             left: l + "px",
             width: this.height + "px",
@@ -139,6 +210,7 @@ export default {
       }
 
       this.tracking(idx, true);
+      this.squareCount = 0;
       moving = !moving;
 
       document.addEventListener("mousemove", this.move);
@@ -148,20 +220,60 @@ export default {
       this.points[this.currentTarget].y = e.clientY - 10;
     },
     check() {
-      this.points.forEach(v => {
-        console.log(v);
+      // 세로 막대기만을 기준으로 사각형 판단
+      --this.limit;
+      let last = height * (c - 1) + width * (c - 1);
+      const array = [
+        { x: width * 1 + height * 1, y: width * 3 + height * 2 },
+        { x: width * 3 + height * 3, y: width * 3 + height * 2 },
+        { x: width * 0 + height * 0, y: width * 4 + height * 3 },
+        { x: width * 2 + height * 2, y: width * 4 + height * 3 },
+      ];
+      array.forEach(v => {
+        let temp = 0;
+        this.points.forEach(vv => {
+          if (v.x === vv.x && v.y === vv.y) return;
+          if (v.x + width === vv.x) {
+            if (v.y - width === vv.y) {
+              // up
+              ++temp;
+            }
+            if (v.y + height === vv.y) {
+              // down
+              ++temp;
+            }
+          }
+          if (v.x + width + height === vv.x && v.y === vv.y) {
+            // right
+            ++temp;
+          }
+        });
+
+        if (temp === 3) {
+          ++this.squareCount;
+        }
       });
+
+      if (this.squareCount === 4 && this.limit === 0) {
+        alert("SUCCESS");
+        return;
+      }
+      if (this.limit === 0) {
+        alert("END");
+      }
     },
     tracking(idx, start) {
       if (!start) {
         document.removeEventListener("mousemove", this.mouseUpdate);
         document.removeEventListener("mouseenter", this.mouseUpdate);
 
-        let point = this.prevTarget.getBoundingClientRect();
-        this.points[idx].width = point.width;
-        this.points[idx].height = point.height;
-        this.points[idx].x = point.left;
-        this.points[idx].y = point.top;
+        if (this.prevTarget) {
+          let point = this.prevTarget.getBoundingClientRect();
+          this.points[idx].width = point.width;
+          this.points[idx].height = point.height;
+          this.points[idx].x = point.left;
+          this.points[idx].y = point.top;
+        }
 
         this.check();
         return;
@@ -176,34 +288,48 @@ export default {
     mouseUpdate(e) {
       this.mouseX = e.pageX;
       this.mouseY = e.pageY;
-
       this.find();
     },
     find() {
       let target;
       this.min = 99999999999;
       this.$refs.allow.forEach((candidate, i) => {
-        let temp = this.distance(
-          candidate.style.top.slice(0, -2),
-          candidate.style.left.slice(0, -2),
-          this.mouseX,
-          this.mouseY
-        );
-        if (this.min > temp) {
-          this.min = temp;
-          target = candidate;
+        // 이미 성냥이 있는 곳은 제외
+        if (!this.isExist(candidate)) {
+          let temp = this.distance(
+            Number(candidate.style.top.slice(0, -2)),
+            Number(candidate.style.left.slice(0, -2)),
+            this.mouseX,
+            this.mouseY
+          );
+          if (this.min > temp) {
+            this.min = temp;
+            target = candidate;
+          }
         }
       });
 
       if (this.prevTarget) {
-        this.prevTarget.style.backgroundColor = "red";
+        this.prevTarget.style.backgroundColor = "white";
       }
 
-      target.style.backgroundColor = "blue";
+      target.style.backgroundColor = "gray";
       this.prevTarget = target;
     },
     distance(cy, cx, mx, my) {
       return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
+    },
+    isExist(c) {
+      for (let i in this.points) {
+        let v = this.points[i];
+        if (
+          v.x === Number(c.style.left.slice(0, -2)) &&
+          v.y === Number(c.style.top.slice(0, -2))
+        ) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 };
@@ -211,5 +337,12 @@ export default {
 
 <style lang="scss" scoped>
 .board-container {
+  .down, .across {
+    position: absolute;
+    background-color: white;
+  }
+  .cnt {
+    position: absolute;
+  }
 }
 </style>

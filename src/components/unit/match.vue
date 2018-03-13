@@ -57,6 +57,6 @@ export default {
 <style lang="scss" scoped>
 .match {
   position: absolute;
-  background-color: black;
+  background-color: #FFDD73;
 }
 </style>
