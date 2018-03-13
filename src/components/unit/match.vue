@@ -2,7 +2,7 @@
   <div 
     class="match" 
     :style="[staticStyle, {transform: translateXY}]"
-    @mousedown="initialClick">
+    @mousedown="click">
   </div>
 </template>
 
@@ -29,10 +29,6 @@ export default {
     }
   },
   components: {},
-  mounted() {
-    this.translateX = this.x;
-    this.translateY = this.y;
-  },
   data() {
     return {
       translateX: 0,
@@ -47,26 +43,12 @@ export default {
       };
     },
     translateXY() {
-      return "translate(" + this.translateX + "px, " + this.translateY + "px)";
+      return "translate(" + this.x + "px, " + this.y + "px)";
     }
   },
   methods: {
-    move(e) {
-      this.translateX = e.clientX - 10;
-      this.translateY = e.clientY - 10;
-    },
-    initialClick() {
-      if (moving) {
-        document.removeEventListener("mousemove", this.move);
-        moving = !moving;
-        this.$parent.tracking(this.idx, false);
-        return;
-      }
-
-      this.$parent.tracking(this.idx, true);
-      moving = !moving;
-
-      document.addEventListener("mousemove", this.move, false);
+    click(e) {
+      this.$parent.matchClick(this.idx)
     }
   }
 };

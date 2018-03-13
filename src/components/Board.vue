@@ -16,7 +16,7 @@
       :style="item.style">
     </div>
 
-    <match 
+    <match
       v-for="(item, index) in points"
       :key="index"
       ref="match"
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+let moving = false;
+
 import match from "@/components/unit/match";
 
 let width = 20;
@@ -45,6 +47,7 @@ export default {
   },
   data() {
     return {
+      currentTarget: -1,
       width: 20,
       height: 60,
       mouseX: 0,
@@ -55,24 +58,36 @@ export default {
       col: [],
       points: [
         {
-          x: 80,
-          y: 320,
-          width: 60,
-          height: 20
+          x: height * 1 + width * 1,
+          y: height * 3 + width * 4,
+          width: width,
+          height: height
         },
         {
-          x: 180,
-          y: 220,
-          width: 20,
-          height: 60
+          x: height * 2 + width * 2,
+          y: height * 3 + width * 4,
+          width: width,
+          height: height
+        },
+        {
+          x: height * 2 + width * 3,
+          y: height * 3 + width * 3,
+          width: height,
+          height: width
+        },
+        {
+          x: height * 1 + width * 2,
+          y: height * 3 + width * 3,
+          width: height,
+          height: width
         }
       ]
     };
   },
   created() {
-    for (let i = 1; i <= r; i++) {
-      for (let j = 1; j <= c; j++) {
-        let t = i * (height + width);
+    for (let i = 0; i < r; i++) {
+      for (let j = 0; j < c; j++) {
+        let t = i * (height + width) + width;
         let l = j * (height + width);
 
         this.row.push({
@@ -89,13 +104,13 @@ export default {
       }
     }
 
-    for (let i = 1; i <= r - 1; i++) {
-      for (let j = 1; j <= c + 1; j++) {
+    for (let i = 0; i < r - 1; i++) {
+      for (let j = 0; j < c + 1; j++) {
         let t = j * height;
         let l = i * (height + width) + width;
 
-        if (j > 1 && j <= c + 1) {
-          t += width * j - width;
+        if (j > 0 && j < c + 1) {
+          t += width * j;
         }
 
         this.col.push({
@@ -113,6 +128,30 @@ export default {
     }
   },
   methods: {
+    matchClick(idx) {
+      this.currentTarget = idx;
+
+      if (moving) {
+        document.removeEventListener("mousemove", this.move);
+        moving = !moving;
+        this.tracking(idx, false);
+        return;
+      }
+
+      this.tracking(idx, true);
+      moving = !moving;
+
+      document.addEventListener("mousemove", this.move);
+    },
+    move(e) {
+      this.points[this.currentTarget].x = e.clientX - 10;
+      this.points[this.currentTarget].y = e.clientY - 10;
+    },
+    check() {
+      this.points.forEach(v => {
+        console.log(v);
+      });
+    },
     tracking(idx, start) {
       if (!start) {
         document.removeEventListener("mousemove", this.mouseUpdate);
@@ -121,8 +160,10 @@ export default {
         let point = this.prevTarget.getBoundingClientRect();
         this.points[idx].width = point.width;
         this.points[idx].height = point.height;
-        this.$refs.match[idx].$el.style.transform =
-          "translate(" + point.left + "px, " + point.top + "px)";
+        this.points[idx].x = point.left;
+        this.points[idx].y = point.top;
+
+        this.check();
         return;
       }
 
@@ -136,13 +177,13 @@ export default {
       this.mouseX = e.pageX;
       this.mouseY = e.pageY;
 
-      this.findAllowArea();
+      this.find();
     },
-    findAllowArea() {
+    find() {
       let target;
       this.min = 99999999999;
       this.$refs.allow.forEach((candidate, i) => {
-        let temp = this.getDistance(
+        let temp = this.distance(
           candidate.style.top.slice(0, -2),
           candidate.style.left.slice(0, -2),
           this.mouseX,
@@ -161,7 +202,7 @@ export default {
       target.style.backgroundColor = "blue";
       this.prevTarget = target;
     },
-    getDistance(cy, cx, mx, my) {
+    distance(cy, cx, mx, my) {
       return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
     }
   }
