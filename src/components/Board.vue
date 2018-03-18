@@ -227,7 +227,7 @@ export default {
         { x: width * 1 + height * 1, y: width * 3 + height * 2 },
         { x: width * 3 + height * 3, y: width * 3 + height * 2 },
         { x: width * 0 + height * 0, y: width * 4 + height * 3 },
-        { x: width * 2 + height * 2, y: width * 4 + height * 3 },
+        { x: width * 2 + height * 2, y: width * 4 + height * 3 }
       ];
       array.forEach(v => {
         let temp = 0;
@@ -337,7 +337,8 @@ export default {
 
 <style lang="scss" scoped>
 .board-container {
-  .down, .across {
+  .down,
+  .across {
     position: absolute;
     background-color: white;
   }
