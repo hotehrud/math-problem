@@ -1,7 +1,7 @@
 <template>
   <div 
     class="sidebar"
-    v-bind:class="{'sidebar-open': isShowing}"
+    v-bind:class="{'sidebar-open': show}"
     @click="propagationPrevent">
 
     <div class="made-with">
@@ -19,31 +19,19 @@
 export default {
   name: "sidebar",
   components: {},
-  data() {
-    return {
-      show: false
-    };
-  },
-  mounted() {
-    // this.$on("toggleShow", this.toggleShow);
-    // EventBus.$on("open-sidebar", this.toggleShow);
-  },
-  computed: {
-    isShowing: {
-      get() {
-        return this.show;
-      },
-      set(newValue) {
-        this.show = newValue;
-      }
+  props: {
+    show: {
+      type: Boolean
     }
   },
+  data() {
+    return {};
+  },
+  mounted() {},
+  computed: {},
   methods: {
     propagationPrevent(e) {
       e.stopPropagation();
-    },
-    toggleShow() {
-      this.isShowing = !this.isShowing;
     }
   }
 };

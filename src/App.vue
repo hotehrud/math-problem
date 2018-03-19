@@ -1,22 +1,53 @@
 <template>
   <div id="app">
-    <sidebar/>
+    <sidebar
+     :show="sideStatus"/>
 
-    <transition appear
-      name="slide-fade"
-      mode="out-in">>
-      <router-view/>
-    </transition>
+    <div 
+      class="container"
+      @click="close">
+      <toolbar/>
+
+      <transition appear
+        name="slide-fade"
+        mode="out-in">>
+        <router-view/>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
 import sidebar from "@/components/sidebar";
+import toolbar from "@/components/toolbar";
 
 export default {
   name: "app",
   components: {
-    sidebar
+    sidebar,
+    toolbar
+  },
+  data() {
+    return {};
+  },
+  created() {
+    // check, size of device
+    this.$store.commit(
+      "setSidebarStatus",
+      window.innerWidth < 1200 ? false : true
+    );
+  },
+  computed: {
+    sideStatus() {
+      return this.$store.getters.sidebarStatus;
+    }
+  },
+  methods: {
+    close() {
+      if (this.sideStatus) {
+        this.$store.commit("setSidebarStatus", false);
+      }
+    }
   }
 };
 </script>
