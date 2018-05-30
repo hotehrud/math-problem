@@ -4,6 +4,8 @@
     v-bind:class="{'sidebar-open': show}"
     @click="propagationPrevent">
 
+    <slot/>
+
     <div class="made-with">
       <h4>
         Made with
@@ -47,6 +49,7 @@ export default {
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   transform: translate3d(-100%, 0, 0);
   width: $sidebar-width;
+  color: #fff;
   background-color: $primary-color;
   @include respond-to($large-desktop) {
     transform: translateZ(0);

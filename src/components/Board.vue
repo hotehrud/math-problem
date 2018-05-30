@@ -1,31 +1,13 @@
 <template>
   <div class="board-container">
     <div class="cnt">{{ squareCount }}</div>
-    <div
-      v-for="(item, index) in row"
-      ref="allow"
-      class="down"
-      :class="item.uid"
-      :style="item.style">
+    <div v-for="(item, index) in row" ref="allow" class="down" :class="item.uid" :style="[item.style, {transform: item.style.translate}]">
     </div>
 
-    <div
-      v-for="(item, index) in col"
-      ref="allow"
-      class="across"
-      :class="item.uid"
-      :style="item.style">
+    <div v-for="(item, index) in col" ref="allow" class="across" :class="item.uid" :style="[item.style, {transform: item.style.translate}]">
     </div>
 
-    <match
-      v-for="(item, index) in points"
-      :key="index"
-      ref="match"
-      :idx="index"
-      :x="item.x"
-      :y="item.y"
-      :width="item.width"
-      :height="item.height"/>
+    <match v-for="(item, index) in points" :key="index" ref="match" :idx="index" :x="item.x" :y="item.y" :width="item.width" :height="item.height" />
 
   </div>
 </template>
@@ -33,7 +15,7 @@
 <script>
 let moving = false;
 
-import match from "@/components/unit/match";
+import match from "@/components/shared-components/match";
 
 let width = 20;
 let height = 60;
@@ -59,6 +41,10 @@ export default {
       prevTarget: null,
       row: [],
       col: [],
+      startPos: {
+        top: 0,
+        left: 0
+      },
       points: [
         {
           x: height * 2 + width * 2,
@@ -160,6 +146,8 @@ export default {
     };
   },
   created() {
+    this.$on("matchClick", this.matchClick);
+
     for (let i = 0; i < r; i++) {
       for (let j = 0; j < c; j++) {
         let t = i * (height + width) + width;
@@ -168,10 +156,9 @@ export default {
         this.row.push({
           uid: i + "" + j + "" + i + "" + (j + 1),
           style: {
-            top: t + "px",
-            left: l + "px",
-            width: this.width + "px",
-            height: this.height + "px"
+            translate: "translate(" + l + "px, " + t + "px)",
+            width: width + "px",
+            height: height + "px"
           }
         });
       }
@@ -189,35 +176,42 @@ export default {
         this.col.push({
           uid: j + "" + i + "" + (j + 1) + "" + i,
           style: {
-            top: t + "px",
-            left: l + "px",
-            width: this.height + "px",
-            height: this.width + "px"
+            translate: "translate(" + l + "px, " + t + "px)",
+            width: height + "px",
+            height: width + "px"
           }
         });
       }
     }
   },
+  mounted() {
+    // 성냥맵 위치 파악
+    let rect = this.$el.getBoundingClientRect();
+    this.startPos.top = rect.top;
+    this.startPos.left = rect.left;
+  },
   methods: {
     matchClick(idx) {
       this.currentTarget = idx;
-
       if (moving) {
+        // 성냥 배치
         document.removeEventListener("mousemove", this.move);
         moving = !moving;
         this.tracking(idx, false);
         return;
+      } else {
+        // 성냥 이동
+        this.tracking(idx, true);
+        this.squareCount = 0;
+        moving = !moving;
+
+        document.addEventListener("mousemove", this.move);
       }
-
-      this.tracking(idx, true);
-      this.squareCount = 0;
-      moving = !moving;
-
-      document.addEventListener("mousemove", this.move);
     },
     move(e) {
-      this.points[this.currentTarget].x = e.clientX - 10;
-      this.points[this.currentTarget].y = e.clientY - 10;
+      // 레이아웃에 따른 위치 조절
+      this.points[this.currentTarget].x = e.clientX - this.startPos.left;
+      this.points[this.currentTarget].y = e.clientY - this.startPos.top;
     },
     check() {
       // 세로 막대기만을 기준으로 사각형 판단
@@ -263,45 +257,44 @@ export default {
       }
     },
     tracking(idx, start) {
+      // start === true ? move : fix
       if (!start) {
         document.removeEventListener("mousemove", this.mouseUpdate);
         document.removeEventListener("mouseenter", this.mouseUpdate);
-
         if (this.prevTarget) {
           let point = this.prevTarget.getBoundingClientRect();
           this.points[idx].width = point.width;
           this.points[idx].height = point.height;
-          this.points[idx].x = point.left;
-          this.points[idx].y = point.top;
+          this.points[idx].x = point.left - this.startPos.left;
+          this.points[idx].y = point.top - this.startPos.top;
         }
-
         this.check();
-        return;
+      } else {
+        let x = null;
+        let y = null;
+
+        document.addEventListener("mousemove", this.mouseUpdate, false);
+        document.addEventListener("mouseenter", this.mouseUpdate, false);
       }
-
-      let x = null;
-      let y = null;
-
-      document.addEventListener("mousemove", this.mouseUpdate, false);
-      document.addEventListener("mouseenter", this.mouseUpdate, false);
     },
     mouseUpdate(e) {
       this.mouseX = e.pageX;
       this.mouseY = e.pageY;
-      this.find();
+      this.closest();
     },
-    find() {
+    closest() {
       let target;
       this.min = 99999999999;
       this.$refs.allow.forEach((candidate, i) => {
+        let point = candidate.getBoundingClientRect();
         // 이미 성냥이 있는 곳은 제외
-        if (!this.isExist(candidate)) {
-          let temp = this.distance(
-            Number(candidate.style.top.slice(0, -2)),
-            Number(candidate.style.left.slice(0, -2)),
-            this.mouseX,
-            this.mouseY
-          );
+        if (
+          !this.isExist(
+            point.x - this.startPos.left,
+            point.y - this.startPos.top
+          )
+        ) {
+          let temp = distance(point.x, point.y, this.mouseX, this.mouseY);
           if (this.min > temp) {
             this.min = temp;
             target = candidate;
@@ -315,17 +308,15 @@ export default {
 
       target.style.backgroundColor = "gray";
       this.prevTarget = target;
+
+      function distance(cx, cy, mx, my) {
+        return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
+      }
     },
-    distance(cy, cx, mx, my) {
-      return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
-    },
-    isExist(c) {
+    isExist(x, y) {
       for (let i in this.points) {
         let v = this.points[i];
-        if (
-          v.x === Number(c.style.left.slice(0, -2)) &&
-          v.y === Number(c.style.top.slice(0, -2))
-        ) {
+        if (v.x === x && v.y === y) {
           return true;
         }
       }
@@ -337,6 +328,12 @@ export default {
 
 <style lang="scss" scoped>
 .board-container {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  left: calc(50% + #{$sidebar-width});
+  top: 50%;
+  transform: translate(-50%, -50%);
   .down,
   .across {
     position: absolute;

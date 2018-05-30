@@ -1,7 +1,14 @@
 <template>
   <div id="app">
     <sidebar
-     :show="sideStatus"/>
+     :show="sideStatus">
+     <ul>
+       <li v-for="item in menuItems" @click="pageMove(item.n)">
+         <!-- <router-link :to="item.link">{{ item.name }}</router-link> -->
+         {{ item.name }}
+      </li>
+     </ul>
+    </sidebar>
 
     <div 
       class="container"
@@ -28,7 +35,19 @@ export default {
     toolbar
   },
   data() {
-    return {};
+    return {
+      menuItems: [
+        {
+          name: "문제",
+          link: "problem"
+        },
+        {
+          name: "B",
+          link: "problem",
+          n: 1
+        }
+      ]
+    };
   },
   created() {
     // check, size of device
@@ -47,6 +66,15 @@ export default {
       if (this.sideStatus) {
         this.$store.commit("setSidebarStatus", false);
       }
+    },
+    pageMove(n) {
+      console.log(n);
+      this.$router.push({
+        name: "problem",
+        params: {
+          id: n
+        }
+      })
     }
   }
 };

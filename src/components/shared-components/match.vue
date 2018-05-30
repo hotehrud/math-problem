@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="match" 
-    :style="[staticStyle, {transform: translateXY}]"
-    @mousedown="click">
+  <div class="match" :style="[staticStyle, {transform: translateXY}]" @mousedown="click">
   </div>
 </template>
 
@@ -28,7 +25,6 @@ export default {
       type: Number
     }
   },
-  components: {},
   data() {
     return {
       translateX: 0,
@@ -47,8 +43,8 @@ export default {
     }
   },
   methods: {
-    click(e) {
-      this.$parent.matchClick(this.idx)
+    click() {
+      this.$parent.$emit("matchClick", this.idx);
     }
   }
 };
@@ -57,6 +53,6 @@ export default {
 <style lang="scss" scoped>
 .match {
   position: absolute;
-  background-color: #FFDD73;
+  background-color: #ffdd73;
 }
 </style>
