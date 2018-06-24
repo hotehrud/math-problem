@@ -1,21 +1,25 @@
 <template>
   <div class="frame">
-    Problem
+    <component :is="componentLoader" />
   </div>
 </template>
 
 <script>
 export default {
-  name: "problem",
-  components: {},
-  props: [],
   data() {
-    return {};
+    return {
+      pNumber: this.$route.params.id
+    };
+  },
+  created() {},
+  computed: {
+    componentLoader() {
+      return () => import(`@/components/problems/problem-${this.pNumber}`);
+    }
   },
   mounted() {}
 };
 </script>
 
 <style lang="scss" scoped>
-
 </style>

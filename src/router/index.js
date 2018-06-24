@@ -14,13 +14,14 @@ export default new Router({
       component: home
     },
     {
+      name: 'main',
       path: '/problem',
       component: Problem,
     },
     {
       path: '/problem/:id',
       name: 'problem',
-      component: Board
+      component: Problem
     },
     {
       path: '/play',

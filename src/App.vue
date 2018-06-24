@@ -18,15 +18,19 @@
       <transition appear
         name="slide-fade"
         mode="out-in">>
-        <router-view/>
+        <router-view :key="routeStatus" />
       </transition>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
 import sidebar from "@/components/sidebar";
 import toolbar from "@/components/toolbar";
+import board from "@/components/shared-components/board";
+
+Vue.component("boardArea", board);
 
 export default {
   name: "app",
@@ -39,12 +43,17 @@ export default {
       menuItems: [
         {
           name: "문제",
-          link: "problem"
+          link: "problem-0"
         },
         {
           name: "B",
-          link: "problem",
+          link: "problem-1",
           n: 1
+        },
+        {
+          name: "C",
+          link: "problem-2",
+          n: 2
         }
       ]
     };
@@ -59,6 +68,9 @@ export default {
   computed: {
     sideStatus() {
       return this.$store.getters.sidebarStatus;
+    },
+    routeStatus() {
+      return this.$route.params.id;
     }
   },
   methods: {
@@ -68,11 +80,10 @@ export default {
       }
     },
     pageMove(n) {
-      console.log(n);
       this.$router.push({
         name: "problem",
         params: {
-          id: n
+         id: n 
         }
       })
     }
