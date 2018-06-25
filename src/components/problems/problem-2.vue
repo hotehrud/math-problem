@@ -36,21 +36,21 @@
 
 <script>
 import Match from "@/components/shared-components/Match";
+import { Tracking } from "@/mixins/tracking";
 
 let width = 20;
 let height = 60;
-let row = 6;
-let col = 6;
 export default {
   components: {
     Match
   },
+  mixins: [Tracking],
   data() {
     return {
       width: width,
       height: height,
-      row: row,
-      col: col,
+      row: 6,
+      col: 6,
       tempX: 0,
       tempY: 0,
       tempWidth: width,
@@ -166,41 +166,12 @@ export default {
   },
   methods: {
     move(pos) {
-      this.findClosestPosition(pos.x, pos.y, pos.idx);
-    },
-    findClosestPosition(targetX, targetY, idx) {
-      let target;
-      let sx = this.startPosition.x;
-      let sy = this.startPosition.y;
-      this.min = 99999999999;
-      this.$refs.board.$refs.allow.forEach((candidate, i) => {
-        let point = candidate.getBoundingClientRect();
-        let x = point.x - sx;
-        let y = point.y - sy;
-
-        if (!this.isExist(x, y)) {
-          let temp = distance(x, y, targetX, targetY);
-          if (this.min > temp) {
-            this.min = temp;
-            target = candidate;
-          }
-        }
-      });
-
-      const rect = target.getBoundingClientRect();
-      const match = this.points[idx];
-
-      match.width = rect.width;
-      match.height = rect.height;
-
-      this.tempX = rect.left - this.startPosition.x;
-      this.tempY = rect.top - this.startPosition.y;
-      this.tempWidth = rect.width;
-      this.tempHeight = rect.height;
-
-      function distance(cx, cy, mx, my) {
-        return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
-      }
+      this.findClosestPosition(
+        this.$refs.board.$refs.allow,
+        pos.x,
+        pos.y,
+        pos.idx
+      );
     },
     selectPosition(idx) {
       const match = this.points[idx];
@@ -208,15 +179,6 @@ export default {
       match.y = this.tempY;
       match.width = this.tempWidth;
       match.height = this.tempHeight;
-    },
-    isExist(x, y) {
-      for (let i in this.points) {
-        let v = this.points[i];
-        if (v.x === x && v.y === y) {
-          return true;
-        }
-      }
-      return false;
     }
   }
 };

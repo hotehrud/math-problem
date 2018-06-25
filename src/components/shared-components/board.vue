@@ -12,6 +12,7 @@
       v-for="(item, index) in map">
       <div 
         v-for="i in item"
+        ref="inner"
         :style="[i.style, {transform: i.style.translate}]"
         class="inner">
       </div>
