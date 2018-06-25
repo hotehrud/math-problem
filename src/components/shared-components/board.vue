@@ -1,9 +1,28 @@
 <template>
   <div class="board-container">
-    <div v-for="(item, index) in row" ref="allow" class="down" :class="item.uid" :style="[item.style, {transform: item.style.translate}]">
+    <div 
+      v-for="(item, index) in row" 
+      ref="allow"
+      :class="item.uid" 
+      :style="[item.style, {transform: item.style.translate}]"
+      class="down" >
     </div>
 
-    <div v-for="(item, index) in col" ref="allow" class="across" :class="item.uid" :style="[item.style, {transform: item.style.translate}]">
+    <div 
+      v-for="(item, index) in map">
+      <div 
+        v-for="i in item"
+        :style="[i.style, {transform: i.style.translate}]"
+        class="inner">
+      </div>
+    </div>
+
+    <div 
+      v-for="(item, index) in col" 
+      ref="allow" 
+      :class="item.uid" 
+      :style="[item.style, {transform: item.style.translate}]"
+      class="across" >
     </div>
   </div>
 </template>
@@ -31,11 +50,17 @@ export default {
   data() {
     return {
       row: [],
-      col: []
+      col: [],
+      map: [],
+      inner: this.height
     };
   },
   mounted() {
     this.init();
+    // this.map = new Array(this.rowNumber);
+    // for (let i = 0; i < this.colNumber; i++) {
+    //   this.map[i] = new Array(this.colNumber);
+    // }
   },
   methods: {
     init() {
@@ -45,7 +70,7 @@ export default {
       let c = this.colNumber;
 
       for (let i = 0; i < r; i++) {
-        for (let j = 0; j < c; j++) {
+        for (let j = 0; j < c + 1; j++) {
           let t = i * (height + width) + width;
           let l = j * (height + width);
 
@@ -60,7 +85,23 @@ export default {
         }
       }
 
-      for (let i = 0; i < r - 1; i++) {
+      this.map = new Array(this.rowNumber);
+      for (let i = 0; i < this.rowNumber; i++) {
+        this.map[i] = new Array(this.colNumber);
+        for (let j = 0; j < this.colNumber; j++) {
+          let t = i * (height + width) + width;
+          let l = j * (height + width) + width;
+          this.map[i][j] = {
+            style: {
+              translate: "translate(" + l + "px, " + t + "px)",
+              width: this.inner + "px",
+              height: this.inner + "px"
+            }
+          };
+        }
+      }
+
+      for (let i = 0; i < r; i++) {
         for (let j = 0; j < c + 1; j++) {
           let t = j * height;
           let l = i * (height + width) + width;
@@ -79,7 +120,7 @@ export default {
           });
         }
       }
-    },
+    }
   }
 };
 </script>
@@ -93,9 +134,13 @@ export default {
   // top: 50%;
   // transform: translate(-50%, -50%);
   .down,
+  .inner,
   .across {
     position: absolute;
     background-color: white;
+  }
+  .inner {
+    background: red;
   }
   // .cnt {
   //   position: absolute;

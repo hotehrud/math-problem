@@ -28,7 +28,7 @@
 import Vue from "vue";
 import sidebar from "@/components/sidebar";
 import toolbar from "@/components/toolbar";
-import board from "@/components/shared-components/board";
+import board from "@/components/shared-components/Board";
 
 Vue.component("boardArea", board);
 
@@ -54,6 +54,11 @@ export default {
           name: "C",
           link: "problem-2",
           n: 2
+        },
+        {
+          name: "D",
+          link: "problem-3",
+          n: 3
         }
       ]
     };

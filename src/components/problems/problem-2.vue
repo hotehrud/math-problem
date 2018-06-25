@@ -10,8 +10,8 @@
 
     <match 
       v-for="(item, index) in points" 
-      v-on:moveMatch="move"
-      v-on:batchMatch="selectPosition"
+      v-on:move="move"
+      v-on:batch="selectPosition"
       :key="index" ref="match" 
       :idx="index" 
       :startX="startPosition.x" 
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import match from "@/components/shared-components/match";
+import Match from "@/components/shared-components/Match";
 
 let width = 20;
 let height = 60;
@@ -43,7 +43,7 @@ let row = 6;
 let col = 6;
 export default {
   components: {
-    match
+    Match
   },
   data() {
     return {

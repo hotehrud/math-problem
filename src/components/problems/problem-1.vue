@@ -15,7 +15,7 @@
 <script>
 let moving = false;
 
-import match from "@/components/shared-components/match";
+import Match from "@/components/shared-components/Match";
 
 let width = 20;
 let height = 60;
@@ -26,7 +26,7 @@ export default {
   name: "Board",
   props: [],
   components: {
-    match
+    Match
   },
   data() {
     return {

@@ -52,7 +52,7 @@ export default {
         // batch
         document.removeEventListener("mousemove", this.changePositionMatch);
         this.moving = false;
-        this.$emit("batchMatch", this.idx);
+        this.$emit("batch", this.idx);
         this.$nextTick(() => {
           this.translateX = this.x;
           this.translateY = this.y;
@@ -67,7 +67,7 @@ export default {
     changePositionMatch(e) {
       this.translateX = e.pageX - this.startX;
       this.translateY = e.pageY - this.startY;
-      this.$emit("moveMatch", {
+      this.$emit("move", {
         x: this.translateX,
         y: this.translateY,
         idx: this.idx
