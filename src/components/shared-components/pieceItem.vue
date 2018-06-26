@@ -2,7 +2,7 @@
   <div class="match" 
     :style="{
       position: 'absolute',
-      zIndex: 9999,
+      zIndex: zIndex,
       transform: 'translate(' + translateX + 'px,' + translateY + 'px)',
       width: width + 'px',
       height: width + 'px',

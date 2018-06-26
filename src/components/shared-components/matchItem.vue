@@ -1,9 +1,12 @@
 <template>
   <div class="match" 
     :style="{
+      position: 'absolute',
+      zIndex: zIndex,
       transform: 'translate(' + translateX + 'px,' + translateY + 'px)',
       width: this.width + 'px',
-      height: this.height + 'px'
+      height: this.height + 'px',
+      backgroundColor: 'blue'
     }"
     @click="clickBindingEvent">
   </div>
@@ -40,9 +43,8 @@ export default {
     return {
       translateX: this.x,
       translateY: this.y,
-      w: this.width,
-      h: this.height,
-      moving: false
+      moving: false,
+      zIndex: 9998
     };
   },
   methods: {
@@ -52,6 +54,7 @@ export default {
         // batch
         document.removeEventListener("mousemove", this.changePositionMatch);
         this.moving = false;
+        this.zIndex = 9998;
         this.$emit("batch", this.idx);
         this.$nextTick(() => {
           if (this.x < 0 && this.y < 0) {
@@ -64,6 +67,7 @@ export default {
       } else {
         // move
         this.moving = true;
+        this.zIndex = 9999;
         this.$emit("onClickEvent", this.idx);
         document.addEventListener("mousemove", this.changePositionMatch);
       }
@@ -82,9 +86,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.match {
-  position: absolute;
-  z-index: 9999;
-  background-color: #ffdd73;
-}
 </style>

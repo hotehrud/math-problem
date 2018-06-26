@@ -12,7 +12,8 @@
       v-for="(item, index) in points" 
       v-on:move="move"
       v-on:batch="selectPosition"
-      :key="index" ref="match" 
+      v-on:onClickEvent="reset"
+      :key="index"
       :idx="index" 
       :startX="startPosition.x" 
       :startY="startPosition.y" 
@@ -51,10 +52,10 @@ export default {
       height: height,
       row: 6,
       col: 6,
-      tempX: 0,
-      tempY: 0,
-      tempWidth: width,
-      tempHeight: height,
+      tempX: -9999,
+      tempY: -9999,
+      tempWidth: 0,
+      tempHeight: 0,
       startPosition: {
         x: 0,
         y: 0
@@ -166,12 +167,23 @@ export default {
   },
   methods: {
     move(pos) {
-      this.findClosestPosition(
-        this.$refs.board.$refs.allow,
-        pos.x,
-        pos.y,
-        pos.idx
-      );
+      let x = pos.x;
+      let y = pos.y;
+      let idx = pos.idx;
+
+      this.points[idx].x = x;
+      this.points[idx].y = y;
+
+      this.findClosestPosition(this.$refs.board.$refs.allow, x, y, idx);
+    },
+    reset(idx) {
+      if (idx !== this.prevIdex) {
+        this.tempX = -9999;
+        this.tempY = -9999;
+      }
+      this.tempWidth = this.points[idx].width;
+      this.tempHeight = this.points[idx].height;
+      this.prevIdex = idx;
     },
     selectPosition(idx) {
       const match = this.points[idx];
