@@ -12,6 +12,7 @@
       v-for="(item, index) in points"
       v-on:move="move"
       v-on:batch="selectPosition"
+      v-on:onClickEvent="reset"
       :key="index"
       :idx="index" 
       :startX="startPosition.x" 
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import Piece from "@/components/shared-components/Piece";
+import Piece from "@/components/shared-components/pieceItem";
 import { Tracking } from "@/mixins/tracking";
 
 export default {
@@ -47,8 +48,8 @@ export default {
       height: 60,
       row: 5,
       col: 5,
-      tempX: 0,
-      tempY: 0,
+      tempX: -9999,
+      tempY: -9999,
       startPosition: {
         x: 0,
         y: 0
@@ -84,12 +85,21 @@ export default {
   },
   methods: {
     move(pos) {
-      this.findClosestPosition(
-        this.$refs.board.$refs.inner,
-        pos.x,
-        pos.y,
-        pos.idx
-      );
+      let x = pos.x;
+      let y = pos.y;
+      let idx = pos.idx;
+
+      this.points[idx].x = x;
+      this.points[idx].y = y;
+
+      this.findClosestPosition(this.$refs.board.$refs.inner, x, y, idx);
+    },
+    reset(idx) {
+      if (idx !== this.prevIdex) {
+        this.tempX = -9999;
+        this.tempY = -9999;
+      }
+      this.prevIdex = idx;
     },
     selectPosition(idx) {
       const piece = this.points[idx];

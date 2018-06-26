@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Match from "@/components/shared-components/Match";
+import Match from "@/components/shared-components/matchItem";
 
 export default {
   extends: Match

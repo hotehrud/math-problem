@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Match from "@/components/shared-components/Match";
+import Match from "@/components/shared-components/matchItem";
 import { Tracking } from "@/mixins/tracking";
 
 let width = 20;

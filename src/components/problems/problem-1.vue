@@ -15,7 +15,7 @@
 <script>
 let moving = false;
 
-import Match from "@/components/shared-components/Match";
+import Match from "@/components/shared-components/matchItem";
 
 let width = 20;
 let height = 60;

@@ -13,7 +13,6 @@
 let moving = false;
 
 export default {
-  name: "Match",
   props: {
     idx: {
       type: Number
@@ -47,13 +46,17 @@ export default {
     };
   },
   methods: {
-    clickBindingEvent() {
+    clickBindingEvent(e) {
+      e.stopPropagation();
       if (this.moving) {
         // batch
         document.removeEventListener("mousemove", this.changePositionMatch);
         this.moving = false;
         this.$emit("batch", this.idx);
         this.$nextTick(() => {
+          if (this.x < 0 && this.y < 0) {
+            return;
+          }
           this.translateX = this.x;
           this.translateY = this.y;
         });
@@ -61,6 +64,7 @@ export default {
       } else {
         // move
         this.moving = true;
+        this.$emit("onClickEvent", this.idx);
         document.addEventListener("mousemove", this.changePositionMatch);
       }
     },

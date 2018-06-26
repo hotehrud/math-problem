@@ -28,7 +28,7 @@
 import Vue from "vue";
 import sidebar from "@/components/sidebar";
 import toolbar from "@/components/toolbar";
-import board from "@/components/shared-components/Board";
+import board from "@/components/shared-components/boardArea";
 
 Vue.component("boardArea", board);
 
