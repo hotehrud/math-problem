@@ -4,26 +4,19 @@
       position: 'absolute',
       zIndex: zIndex,
       transform: 'translate(' + translateX + 'px,' + translateY + 'px)',
-      width: this.width + 'px',
-      height: this.height + 'px',
-      backgroundColor: 'blue'
+      width: w + 'px',
+      height: h + 'px'
     }"
     @click="clickBindingEvent">
   </div>
 </template>
 
 <script>
-let moving = false;
+let reduce = 8;
 
 export default {
   props: {
     idx: {
-      type: Number
-    },
-    startX: {
-      type: Number
-    },
-    startY: {
       type: Number
     },
     x: {
@@ -46,6 +39,29 @@ export default {
       moving: false,
       zIndex: 9998
     };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const pos = this.$parent.$refs.board.$el.getBoundingClientRect();
+      this.translateX += pos.left;
+      this.translateY += pos.top;
+    });
+  },
+  computed: {
+    w() {
+      if (this.width > this.height) {
+        return this.width;
+      } else {
+        return this.width - reduce;
+      }
+    },
+    h() {
+      if (this.width > this.height) {
+        return this.height - reduce;
+      } else {
+        return this.height;
+      }
+    }
   },
   methods: {
     clickBindingEvent(e) {
@@ -73,8 +89,8 @@ export default {
       }
     },
     changePositionMatch(e) {
-      this.translateX = e.pageX - this.startX;
-      this.translateY = e.pageY - this.startY;
+      this.translateX = e.pageX;
+      this.translateY = e.pageY;
       this.$emit("move", {
         x: this.translateX,
         y: this.translateY,
@@ -86,4 +102,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.match {
+  &:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    border-radius: 80%;
+    background-color: #ff3636;
+    z-index: 2;
+  }
+  &:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background-color: #ffbb00;
+    border-radius: 3px;
+  }
+}
 </style>

@@ -166,11 +166,11 @@ p {
   }
 }
 .container {
-  padding-top: 65px;
-  height: 100%;
-  @include respond-to($large-desktop) {
-    padding-left: $sidebar-width;
-  }
+  // padding-top: 65px;
+  // height: 100%;
+  // @include respond-to($large-desktop) {
+  //   padding-left: $sidebar-width;
+  // }
 }
 svg {
   top: auto;

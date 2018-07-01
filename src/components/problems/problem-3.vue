@@ -15,8 +15,6 @@
       v-on:onClickEvent="reset"
       :key="index"
       :idx="index" 
-      :startX="startPosition.x" 
-      :startY="startPosition.y" 
       :x="item.x" 
       :y="item.y" 
       :width="item.width" />
@@ -50,10 +48,6 @@ export default {
       col: 5,
       tempX: -9999,
       tempY: -9999,
-      startPosition: {
-        x: 0,
-        y: 0
-      },
       points: []
     };
   },
@@ -77,11 +71,6 @@ export default {
         }
       }
     }
-  },
-  mounted() {
-    let rect = this.$el.getBoundingClientRect();
-    this.startPosition.x = rect.left;
-    this.startPosition.y = rect.top;
   },
   methods: {
     move(pos) {
@@ -113,4 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.match-empty {
+  border-radius: 25%;
+}
 </style>

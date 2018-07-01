@@ -1,7 +1,7 @@
 <template>
-  <div class="frame">
-    <component :is="componentLoader" />
-  </div>
+  <component 
+    :is="componentLoader" 
+    class="problem-container"/>
 </template>
 
 <script>

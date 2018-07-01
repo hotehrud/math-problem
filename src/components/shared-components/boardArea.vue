@@ -1,5 +1,11 @@
 <template>
-  <div class="board-container">
+  <div 
+    :style="{
+      width: bgWidth,
+      height: bgHeight,
+      transform: 'translate(' + translateX + 'px,' + translateY + 'px)',
+    }"
+    class="board-container">
     <div 
       v-for="(item, index) in row" 
       ref="allow"
@@ -50,6 +56,10 @@ export default {
   },
   data() {
     return {
+      bgWidth: 0,
+      bgHeight: 0,
+      translateX: 0,
+      translateY: 0,
       row: [],
       col: [],
       map: [],
@@ -57,11 +67,16 @@ export default {
     };
   },
   mounted() {
+    // Set, rootArea size
+    let wGap = this.width * (this.colNumber + 1);
+    let hGap = this.width * (this.rowNumber + 1);
+    let w = this.height * this.colNumber;
+    let h = this.height * this.rowNumber;
+    this.bgWidth = w + wGap + "px";
+    this.bgHeight = h + hGap + "px";
+    this.translateX = -(w + wGap + 256) / 2;
+    this.translateY = -(h + hGap + 65) / 2;
     this.init();
-    // this.map = new Array(this.rowNumber);
-    // for (let i = 0; i < this.colNumber; i++) {
-    //   this.map[i] = new Array(this.colNumber);
-    // }
   },
   methods: {
     init() {
@@ -129,19 +144,61 @@ export default {
 <style lang="scss" scoped>
 .board-container {
   position: absolute;
+  // background-color: #DB9700;
   // width: 50%;
   // height: 50%;
-  // left: calc(50% + #{$sidebar-width});
-  // top: 50%;
-  // transform: translate(-50%, -50%);
+  left: calc(50% + #{$sidebar-width});
+  top: calc(50% + #{$header-height});
   .down,
   .inner,
   .across {
     position: absolute;
-    background-color: white;
+  }
+  .down,
+  .across {
+    border: 5px solid #eee;
+    background-color: #484848;
+  }
+  .down {
+    &:before {
+      content: "";
+      left: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: #484848;
+      top: -20px;
+    }
+    &:after {
+      content: "";
+      left: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: #484848;
+      bottom: -20px;
+    }
+  }
+  .across {
+    &:before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: #484848;
+      left: -20px;
+    }
+    &:after {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: #484848;
+      right: -20px;
+    }
   }
   .inner {
-    background: red;
+    // background-color: #FFBB00;
   }
   // .cnt {
   //   position: absolute;
