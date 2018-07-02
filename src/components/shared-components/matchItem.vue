@@ -84,7 +84,12 @@ export default {
         // move
         this.moving = true;
         this.zIndex = 9999;
-        this.$emit("onClickEvent", this.idx);
+        const el = this.$el.getBoundingClientRect();
+        this.$emit("onClickEvent", {
+          idx: this.idx,
+          x: el.left,
+          y: el.top
+        });
         document.addEventListener("mousemove", this.changePositionMatch);
       }
     },
@@ -110,7 +115,7 @@ export default {
     position: absolute;
     left: 0;
     border-radius: 80%;
-    background-color: #ff3636;
+    background-color: #ff5a5a;
     z-index: 2;
   }
   &:after {

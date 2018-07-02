@@ -59,6 +59,11 @@ export default {
           name: "D",
           link: "problem-3",
           n: 3
+        },
+        {
+          name: "E",
+          link: "problem-4",
+          n: 4
         }
       ]
     };

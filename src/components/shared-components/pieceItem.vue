@@ -1,14 +1,14 @@
 <template>
-  <div class="match" 
+  <div class="piece" 
     :style="{
       position: 'absolute',
       zIndex: zIndex,
       transform: 'translate(' + translateX + 'px,' + translateY + 'px)',
       width: width + 'px',
       height: width + 'px',
-      backgroundColor: 'blue'
     }"
     @click="clickBindingEvent">
+    <slot name="image"/>
   </div>
 </template>
 
@@ -21,9 +21,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.match {
+.piece {
   position: absolute;
   z-index: 9999;
-  background-color: #ffdd73;
 }
 </style>

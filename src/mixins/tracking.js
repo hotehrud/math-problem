@@ -8,6 +8,15 @@ export const Tracking = {
     };
   },
   mounted() {
+    // Normalize, coord
+    setTimeout(() => {
+      this.$refs.piece.forEach((item, i) => {
+        const el = item.$el.getBoundingClientRect();
+        this.points[i].x = el.x;
+        this.points[i].y = el.y;
+      });
+    }, 100);
+
     this.$nextTick(() => {
       let rect = this.$refs.board.$el.getBoundingClientRect();
       this.startPosition.x = rect.left;
@@ -23,7 +32,7 @@ export const Tracking = {
         let x = point.x;
         let y = point.y;
 
-        if (!this.isExist(x, y)) {
+        if (this.isPossible(x, y)) {
           let temp = distance(x, y, targetX, targetY);
           if (this.min > temp) {
             this.min = temp;
@@ -47,16 +56,14 @@ export const Tracking = {
         return (mx - cx) * (mx - cx) + (my - cy) * (my - cy);
       }
     },
-    isExist(x, y) {
+    isPossible(x, y) {
       for (let i in this.points) {
         let v = this.points[i];
-        let vx = v.x + this.startPosition.x;
-        let vy = v.y + this.startPosition.y;
-        if (vx === x && vy === y) {
-          return true;
+        if (v.x === x && v.y === y) {
+          return false;
         }
       }
-      return false;
+      return true;
     }
   }
 };

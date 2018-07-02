@@ -9,7 +9,6 @@
       class="board-container" />
 
     <piece
-      ref="piece"
       v-for="(item, index) in points"
       v-on:move="move"
       v-on:batch="selectPosition"
@@ -17,10 +16,8 @@
       :key="index"
       :idx="index" 
       :x="item.x" 
-      :y="item.y"
-      :width="item.width">
-      <img slot="image" src="../../assets/coin.png">
-    </piece>
+      :y="item.y" 
+      :width="item.width" />
 
       <div 
         :style="{
@@ -38,8 +35,6 @@
 import Piece from "@/components/shared-components/pieceItem";
 import { Tracking } from "@/mixins/tracking";
 
-import image from "../../assets/coin.png";
-
 export default {
   components: {
     Piece
@@ -53,8 +48,6 @@ export default {
       col: 5,
       tempX: -9999,
       tempY: -9999,
-      prevX: 0,
-      prevY: 0,
       points: []
     };
   },
@@ -90,16 +83,11 @@ export default {
 
       this.findClosestPosition(this.$refs.board.$refs.inner, x, y, idx);
     },
-    reset(obj) {
-      let idx = obj.idx;
-      this.prevX = obj.x;
-      this.prevY = obj.y;
+    reset(idx) {
       if (idx !== this.prevIdex) {
         this.tempX = -9999;
         this.tempY = -9999;
       }
-      this.tempX = this.prevX;
-      this.tempY = this.prevY;
       this.prevIdex = idx;
     },
     selectPosition(idx) {
@@ -108,37 +96,6 @@ export default {
       piece.y = this.tempY;
       piece.width = this.tempWidth;
       piece.height = this.tempHeight;
-    },
-    isPossible(x, y) {
-      if (this.prevX === x && this.prevY === y) {
-        return true;
-      }
-      // already exist
-      for (let i in this.points) {
-        let v = this.points[i];
-        if (v.x === x && v.y === y) {
-          return false;
-        }
-      }
-      // prevX => current coin, x => candidate in board
-      let absX = Math.abs(this.prevX - x);
-      let absY = Math.abs(this.prevY - y);
-      let dist = (this.height + this.width) * 2;
-
-      // 2 exceed
-      if (absX > dist || absY > dist) {
-        return false;
-      }
-
-      if ((absX === dist && absY === 0) || (absY === dist && absX === 0)) {
-        // line direction
-        return true;
-      } else if (absX === dist && absY === dist) {
-        // diagonal
-        return true;
-      } else {
-        return false;
-      }
     }
   }
 };

@@ -10,6 +10,7 @@
 
     <match 
       v-for="(item, index) in points" 
+      ref="piece"
       v-on:move="move"
       v-on:batch="selectPosition"
       v-on:onClickEvent="reset"
