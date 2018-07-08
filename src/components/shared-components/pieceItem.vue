@@ -24,5 +24,17 @@ export default {
 .piece {
   position: absolute;
   z-index: 9999;
+  span {
+    &:before {
+      content: "";
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      left: 0;
+      border-radius: 50%;
+      background-color: #000;
+      z-index: 2;
+    }
+  }
 }
 </style>

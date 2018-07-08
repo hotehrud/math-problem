@@ -10,14 +10,17 @@
 
     <piece
       v-for="(item, index) in points"
+      ref="piece"
       v-on:move="move"
       v-on:batch="selectPosition"
       v-on:onClickEvent="reset"
       :key="index"
       :idx="index" 
       :x="item.x" 
-      :y="item.y" 
-      :width="item.width" />
+      :y="item.y"
+      :width="item.width">
+      <span slot="image"/>
+    </piece>
 
       <div 
         :style="{
@@ -44,22 +47,23 @@ export default {
     return {
       width: 20,
       height: 60,
-      row: 5,
-      col: 5,
+      row: 8,
+      col: 8,
       tempX: -9999,
       tempY: -9999,
+      prevX: 0,
+      prevY: 0,
       points: []
     };
   },
   created() {
-    // (1 ~ 3, 1 ~ 3)
-    let n = 9;
+    let n = 8;
     let i = 0;
     let w = this.width;
     let h = this.height;
     while (i < n) {
-      for (let r = 1; r <= 3; r++) {
-        for (let c = 1; c <= 3; c++) {
+      for (let r = 1; r <= 1; r++) {
+        for (let c = 1; c <= 1; c++) {
           let xx = r * (w + h) + w;
           let yy = c * (w + h) + w;
           this.$set(this.points, i, {
@@ -83,11 +87,16 @@ export default {
 
       this.findClosestPosition(this.$refs.board.$refs.inner, x, y, idx);
     },
-    reset(idx) {
+    reset(obj) {
+      let idx = obj.idx;
+      this.prevX = obj.x;
+      this.prevY = obj.y;
       if (idx !== this.prevIdex) {
         this.tempX = -9999;
         this.tempY = -9999;
       }
+      this.tempX = this.prevX;
+      this.tempY = this.prevY;
       this.prevIdex = idx;
     },
     selectPosition(idx) {
@@ -96,6 +105,31 @@ export default {
       piece.y = this.tempY;
       piece.width = this.tempWidth;
       piece.height = this.tempHeight;
+    },
+    isPossible(x, y) {
+      if (this.prevX === x && this.prevY === y) {
+        return true;
+      }
+      for (let i in this.points) {
+        let v = this.points[i];
+        // already exist
+        if (v.x === x && v.y === y) {
+          return false;
+        }
+        // horizontality
+        if (v.x === x) {
+          return false;
+        }
+        // vertical
+        if (v.y === y) {
+          return false;
+        }
+        // diagonal
+        if (Math.abs(v.x - x) === Math.abs(v.y - y)) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 };
