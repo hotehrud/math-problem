@@ -142,11 +142,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$item-color: #484848;
+
 .board-container {
   position: absolute;
-  // background-color: #DB9700;
-  // width: 50%;
-  // height: 50%;
   left: calc(50% + #{$sidebar-width});
   top: calc(50% + #{$header-height});
   .down,
@@ -156,8 +155,8 @@ export default {
   }
   .down,
   .across {
-    border: 5px solid #eee;
-    background-color: #484848;
+    border: 5px solid $bg-color;
+    background-color: $item-color;
   }
   .down {
     &:before {
@@ -166,7 +165,7 @@ export default {
       width: 100%;
       height: 100%;
       position: absolute;
-      background-color: #484848;
+      background-color: $item-color;
       top: -20px;
     }
     &:after {
@@ -175,7 +174,7 @@ export default {
       width: 100%;
       height: 100%;
       position: absolute;
-      background-color: #484848;
+      background-color: $item-color;
       bottom: -20px;
     }
   }
@@ -185,7 +184,7 @@ export default {
       width: 100%;
       height: 100%;
       position: absolute;
-      background-color: #484848;
+      background-color: $item-color;
       left: -20px;
     }
     &:after {
@@ -193,7 +192,7 @@ export default {
       width: 100%;
       height: 100%;
       position: absolute;
-      background-color: #484848;
+      background-color: $item-color;
       right: -20px;
     }
   }

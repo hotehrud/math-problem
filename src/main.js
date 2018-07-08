@@ -1,22 +1,24 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { sync } from 'vuex-router-sync'
+import Vue from "vue";
+import { sync } from "vuex-router-sync";
 
-import App from './App'
-import store from './store'
-import router from './router'
+import App from "./App";
+import store from "./store";
+import router from "./router";
+import Request from "@/js/request";
 
-sync(store, router)
+sync(store, router);
 
-Vue.config.productionTip = false
+Vue.prototype.$http = new Request();
+
+Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: "#app",
   router,
   store,
   components: { App },
-  template: '<App/>'
-})
+  template: "<App/>"
+});

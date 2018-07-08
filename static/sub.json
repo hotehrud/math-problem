@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Easy - 1",
+    "imageURL": "static/img/1.png",
+    "requestURL": "basic.json"
+  },
+  {
+    "title": "Easy - 2",
+    "imageURL": "static/img/2.png",
+    "requestURL": "b.json"
+  },
+  {
+    "title": "Medium - 1",
+    "imageURL": "static/img/3.png",
+    "requestURL": "c.json"
+  },
+  {
+    "title": "Hard - 1",
+    "imageURL": "static/img/4.png",
+    "requestURL": "d.json"
+  }
+]

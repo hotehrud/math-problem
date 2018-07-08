@@ -19,7 +19,7 @@
       :x="item.x" 
       :y="item.y"
       :width="item.width">
-      <img slot="image" src="../../assets/coin.png">
+      <img slot="image" src="../../assets/images/coin.png">
     </piece>
 
       <div 
@@ -38,7 +38,7 @@
 import Piece from "@/components/shared-components/pieceItem";
 import { Tracking } from "@/mixins/tracking";
 
-import image from "../../assets/coin.png";
+// import image from "../../assets/coin.png";
 
 export default {
   components: {

@@ -40,6 +40,8 @@ export default {
 </script>
 
 <style lang="scss" scpoed>
+$made-color: #546e7a;
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -58,7 +60,7 @@ export default {
     position: absolute;
     bottom: 0;
     width: inherit;
-    color: #546e7a;
+    color: $made-color;
     h4 {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -74,8 +76,8 @@ export default {
         width: 1rem;
         height: 1rem;
         margin-left: 0.25rem;
-        color: #546e7a;
-        background: url(../assets/logo.png);
+        color: $made-color;
+        background: url(../assets/images/logo.png);
         background-size: 100% 100%;
       }
     }

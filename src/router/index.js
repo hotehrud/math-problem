@@ -1,27 +1,35 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import home from '@/views/home'
-import Problem from '@/views/Problem'
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "@/views/home";
+import ProblemList from "@/views/ProblemList";
+import Problem from "@/views/Problem";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: home
+      name: "home",
+      path: "/",
+      component: Home
     },
     {
-      name: 'main',
-      path: '/problem',
-      component: Problem,
+      name: "problemList",
+      path: "/problem",
+      component: ProblemList,
+      beforeEnter(to, from, next) {
+        if (!to.params.id) {
+          next("/");
+        } else {
+          next();
+        }
+      }
     },
     {
-      path: '/problem/:id',
-      name: 'problem',
+      name: "problem",
+      path: "/problem/:id",
       component: Problem
     }
   ],
-  mode: 'history'
-})
+  mode: "history"
+});

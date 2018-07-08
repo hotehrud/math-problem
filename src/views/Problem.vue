@@ -8,13 +8,14 @@
 export default {
   data() {
     return {
-      pNumber: this.$route.params.id
+      uid: this.$route.params.id
     };
   },
   created() {},
   computed: {
     componentLoader() {
-      return () => import(`@/components/problems/problem-${this.pNumber}`);
+      return () => import(`@/components/problems/${this.uid}`);
+      // return () => import(`@/components/problems/problem-${this.pNumber}`);
     }
   },
   mounted() {}

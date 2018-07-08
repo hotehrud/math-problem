@@ -3,9 +3,9 @@
     <sidebar
      :show="sideStatus">
      <ul>
-       <li v-for="item in menuItems" @click="pageMove(item.n)">
+       <li v-for="item in menuItems" @click="pageMove(item.requestURL)">
          <!-- <router-link :to="item.link">{{ item.name }}</router-link> -->
-         {{ item.name }}
+         {{ item.title }}
       </li>
      </ul>
     </sidebar>
@@ -25,10 +25,19 @@
 </template>
 
 <script>
+// dev
+if (require) {
+  function importAll(r) {
+    return r.keys().map(r);
+  }
+  importAll(require.context("./assets/images/", false, /\.(png|jpe?g|svg)$/));
+}
+
 import Vue from "vue";
 import sidebar from "@/components/sidebar";
 import toolbar from "@/components/toolbar";
 import board from "@/components/shared-components/boardArea";
+import { getJSON } from "@/js/request";
 
 Vue.component("boardArea", board);
 
@@ -40,35 +49,38 @@ export default {
   },
   data() {
     return {
-      menuItems: [
-        {
-          name: "문제",
-          link: "problem-0"
-        },
-        {
-          name: "B",
-          link: "problem-1",
-          n: 1
-        },
-        {
-          name: "C",
-          link: "problem-2",
-          n: 2
-        },
-        {
-          name: "D",
-          link: "problem-3",
-          n: 3
-        },
-        {
-          name: "E",
-          link: "problem-4",
-          n: 4
-        }
-      ]
+      menuItems: []
+      // menuItems: [
+      //   {
+      //     name: "문제",
+      //     link: "problem-0"
+      //   },
+      //   {
+      //     name: "B",
+      //     link: "problem-1",
+      //     n: 1
+      //   },
+      //   {
+      //     name: "C",
+      //     link: "problem-2",
+      //     n: 2
+      //   },
+      //   {
+      //     name: "D",
+      //     link: "problem-3",
+      //     n: 3
+      //   },
+      //   {
+      //     name: "E",
+      //     link: "problem-4",
+      //     n: 4
+      //   }
+      // ]
     };
   },
-  created() {
+  async created() {
+    this.menuItems = await this.$http.getJSON("sub.json");
+
     // check, size of device
     this.$store.commit(
       "setSidebarStatus",
@@ -89,13 +101,13 @@ export default {
         this.$store.commit("setSidebarStatus", false);
       }
     },
-    pageMove(n) {
+    pageMove(req) {
       this.$router.push({
-        name: "problem",
+        name: "problemList",
         params: {
-         id: n 
+          id: req
         }
-      })
+      });
     }
   }
 };
@@ -132,6 +144,7 @@ h2,
 h3 {
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   margin: 0;
+  opacity: 0.75;
 }
 h4,
 h5,
