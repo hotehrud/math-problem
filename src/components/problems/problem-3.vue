@@ -9,8 +9,8 @@
       class="board-container" />
 
     <piece
-      ref="piece"
       v-for="(item, index) in points"
+      ref="piece"
       v-on:move="move"
       v-on:batch="selectPosition"
       v-on:onClickEvent="reset"
@@ -55,6 +55,7 @@ export default {
       tempY: -9999,
       prevX: 0,
       prevY: 0,
+      removeIndex: -1,
       points: []
     };
   },
@@ -108,6 +109,24 @@ export default {
       piece.y = this.tempY;
       piece.width = this.tempWidth;
       piece.height = this.tempHeight;
+
+      if (this.prevX !== this.tempX || this.prevY !== this.tempY) {
+        // remove coin
+        const removeIdx = this.findRemoveCoin(
+          this.prevX,
+          this.prevY,
+          this.tempX,
+          this.tempY
+        );
+        if (removeIdx > -1) {
+          for (let i in this.points) {
+            const item = this.points[i];
+          }
+          const removeCoin = this.points[removeIdx];
+          removeCoin.x = -9999;
+          removeCoin.y = -9999;
+        }
+      }
     },
     isPossible(x, y) {
       if (this.prevX === x && this.prevY === y) {
@@ -130,15 +149,73 @@ export default {
         return false;
       }
 
-      if ((absX === dist && absY === 0) || (absY === dist && absX === 0)) {
-        // line direction
-        return true;
-      } else if (absX === dist && absY === dist) {
-        // diagonal
+      if (
+        (absX === dist && absY === 0) ||
+        (absY === dist && absX === 0) ||
+        (absX === dist && absY === dist)
+      ) {
+        // line direction, diagonal
+        if (this.checkCoin(x, y)) {
+          return true;
+        }
+        return false;
+      }
+
+      return false;
+    },
+    checkCoin(x, y) {
+      const idx = this.findRemoveCoin(this.prevX, this.prevY, x, y);
+      if (idx > -1) {
         return true;
       } else {
         return false;
       }
+    },
+    findRemoveCoin(ax, ay, bx, by) {
+      // ax,ay => currentPosition, bx,by => movePosition
+      let dist = this.height + this.width;
+      let betweenX = this.prevX;
+      let betweenY = this.prevY;
+
+      if (ax > bx) {
+        // left
+        betweenX = ax - dist;
+        if (ay < by) {
+          // bottom
+          betweenY += dist;
+        } else if (ay > by) {
+          // top
+          betweenY -= dist;
+        } else {
+          betweenY += 0;
+        }
+      } else if (ax < bx) {
+        // right
+        betweenX = ax + dist;
+        if (ay < by) {
+          // bottom
+          betweenY += dist;
+        } else if (ay > by) {
+          // top
+          betweenY -= dist;
+        } else {
+          betweenY += 0;
+        }
+      } else {
+        if (ay < by) {
+          betweenY += dist;
+        } else {
+          betweenY -= dist;
+        }
+      }
+
+      for (let i in this.points) {
+        const item = this.points[i];
+        if (item.x === betweenX && item.y === betweenY) {
+          return i;
+        }
+      }
+      return -1;
     }
   }
 };

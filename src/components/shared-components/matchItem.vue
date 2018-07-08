@@ -102,6 +102,18 @@ export default {
         idx: this.idx
       });
     }
+  },
+  watch: {
+    x(v) {
+      if (v < 0) {
+        this.translateX = v;
+      }
+    },
+    y(v) {
+      if (v < 0) {
+        this.translateY = v;
+      }
+    }
   }
 };
 </script>
