@@ -6,7 +6,7 @@ import Problem from "@/views/Problem";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       name: "home",
@@ -15,21 +15,38 @@ export default new Router({
     },
     {
       name: "problemList",
-      path: "/problem",
+      path: "/list",
       component: ProblemList,
-      beforeEnter(to, from, next) {
-        if (!to.params.id) {
-          next("/");
-        } else {
-          next();
-        }
-      }
+      props: route => ({
+        uid: route.query.id
+      })
     },
     {
       name: "problem",
-      path: "/problem/:id",
-      component: Problem
+      path: "/problem",
+      component: Problem,
+      props: route => ({
+        uid: route.query.id
+      })
     }
   ],
   mode: "history"
 });
+
+function hasQueryParams(route) {
+  return !!Object.keys(route.query).length;
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.name === "home") {
+    next();
+  } else {
+    if (!hasQueryParams(to)) {
+      next("/");
+    } else {
+      next();
+    }
+  }
+});
+
+export default router;

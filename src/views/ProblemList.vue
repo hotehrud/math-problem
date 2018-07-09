@@ -12,21 +12,25 @@
 
 <script>
 export default {
+  props: {
+    uid: {
+      type: String
+    }
+  },
   data() {
     return {
       items: []
     };
   },
   async created() {
-    let requestURL = this.$route.params.id;
-    this.items = await this.$http.getJSON(requestURL);
+    this.items = await this.$http.getJSON(this.uid);
   },
   methods: {
-    pushRouter(id) {
+    pushRouter(n) {
       this.$router.push({
         name: "problem",
-        params: {
-          id: id
+        query: {
+          id: n
         }
       });
     }

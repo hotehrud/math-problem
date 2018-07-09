@@ -4,7 +4,6 @@
      :show="sideStatus">
      <ul>
        <li v-for="item in menuItems" @click="pageMove(item.requestURL)">
-         <!-- <router-link :to="item.link">{{ item.name }}</router-link> -->
          {{ item.title }}
       </li>
      </ul>
@@ -18,7 +17,7 @@
       <transition appear
         name="slide-fade"
         mode="out-in">>
-        <router-view :key="routeStatus" />
+        <router-view :key="routeStatus"/>
       </transition>
     </div>
   </div>
@@ -42,7 +41,6 @@ import { getJSON } from "@/js/request";
 Vue.component("boardArea", board);
 
 export default {
-  name: "app",
   components: {
     sidebar,
     toolbar
@@ -50,32 +48,6 @@ export default {
   data() {
     return {
       menuItems: []
-      // menuItems: [
-      //   {
-      //     name: "문제",
-      //     link: "problem-0"
-      //   },
-      //   {
-      //     name: "B",
-      //     link: "problem-1",
-      //     n: 1
-      //   },
-      //   {
-      //     name: "C",
-      //     link: "problem-2",
-      //     n: 2
-      //   },
-      //   {
-      //     name: "D",
-      //     link: "problem-3",
-      //     n: 3
-      //   },
-      //   {
-      //     name: "E",
-      //     link: "problem-4",
-      //     n: 4
-      //   }
-      // ]
     };
   },
   async created() {
@@ -92,7 +64,7 @@ export default {
       return this.$store.getters.sidebarStatus;
     },
     routeStatus() {
-      return this.$route.params.id;
+      return this.$route.query.id;
     }
   },
   methods: {
@@ -104,7 +76,7 @@ export default {
     pageMove(req) {
       this.$router.push({
         name: "problemList",
-        params: {
+        query: {
           id: req
         }
       });

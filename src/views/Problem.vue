@@ -6,12 +6,11 @@
 
 <script>
 export default {
-  data() {
-    return {
-      uid: this.$route.params.id
-    };
+  props: {
+    uid: {
+      type: String
+    }
   },
-  created() {},
   computed: {
     componentLoader() {
       return () => import(`@/components/problems/${this.uid}`);
